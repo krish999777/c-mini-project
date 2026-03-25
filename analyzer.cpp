@@ -42,29 +42,42 @@ int main(){
         cout<<"failed";
         return 0;
     }
-    curl_easy_setopt(curl,CURLOPT_URL,"https://api.github.com/users/krish999777");
     curl_easy_setopt(curl, CURLOPT_USERAGENT, "C++ App");
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-
-    result=curl_easy_perform(curl);
-    if(result!=CURLE_OK){
-        cout<<"failed";
-        return 0;
+    int n;
+    cout<<"Enter number of students"<<endl;
+    cin>>n;
+    Student s[60];
+    for(int i=0;i<n;i++){
+        response.clear();
+        cout<<"Enter username for student "<<i+1<<endl;
+        string username;
+        cin >> username;
+        string url = "https://api.github.com/users/" + username;
+        curl_easy_setopt(curl,CURLOPT_URL,url.c_str());
+        result=curl_easy_perform(curl);
+        if(result!=CURLE_OK){
+            cout<<"failed"<<endl;
+            i--;
+            continue;
+        }
+        json data = json::parse(response);
+        if(data["message"]=="Not Found"){
+            cout<<endl<<"Not found username"<<endl;;
+            i--;
+            continue;
+        }
+        char login[100];
+        char name_c[50];
+        char bio_c[160];
+        strcpy(login,data["login"].get<string>().c_str());
+        strcpy(name_c,data["name"].get<string>().c_str());
+        strcpy(bio_c,data["bio"].get<string>().c_str());
+        s[i].setStudent(login,name_c,bio_c,data["followers"],data["following"],data["public_repos"]);
+        s[i].getStudent();
     }
 
-    cout<<endl<<endl<<endl;
-    json data = json::parse(response);
 
-    char login[100];
-    char name_c[50];
-    char bio_c[160];
-    strcpy(login,data["login"].get<string>().c_str());
-    strcpy(name_c,data["name"].get<string>().c_str());
-    strcpy(bio_c,data["bio"].get<string>().c_str());
-    Student s;
-    s.setStudent(login,name_c,bio_c,data["followers"],data["following"],data["public_repos"]);
-    s.getStudent();
     curl_easy_cleanup(curl);
-    return 0;
 }
