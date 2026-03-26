@@ -103,6 +103,27 @@ int minimumRepos(int n,Student s[]){
     }
     return minimum;
 }
+float averageFollowers(int n,Student s[]){
+    int total=0;
+    for(int i=0;i<n;i++){
+        total+=s[i].getFollowers();
+    }
+    return (float)total/n;
+}
+float averageFollowing(int n,Student s[]){
+    int total=0;
+    for(int i=0;i<n;i++){
+        total+=s[i].getFollowing();
+    }
+    return (float)total/n;
+}
+float averageRepos(int n,Student s[]){
+    int total=0;
+    for(int i=0;i<n;i++){
+        total+=s[i].getRepos();
+    }
+    return (float)total/n;
+}
 int main(){
     CURL *curl;
     CURLcode result;
@@ -158,7 +179,8 @@ int main(){
         int choice;
         cout<<"------------------CHOOSE YOUR CHOICE------------------"<<endl;
         cout<<setw(10)<<1<<"\t View details of all users"<<endl; 
-        cout<<setw(10)<<2<<"\t Maximum and Minimum Followers,following,repos"<<endl; 
+        cout<<setw(10)<<2<<"\t Maximum and Minimum followers,following,repos"<<endl; 
+        cout<<setw(10)<<2<<"\t Average followers,following,repos"<<endl; 
         cout<<setw(10)<<0<<"\t Exit program"<<endl; 
         cin>>choice;
         if(choice==0){
@@ -185,7 +207,17 @@ int main(){
             cout<<setw(20)<<"Maximum Repos"<<"\t"<<maxr<<endl;
             cout<<setw(20)<<"Minimum Repos"<<"\t"<<minr<<endl;
             cout<<endl;
-        }else{
+        }else if(choice==3){
+            float avgfr=averageFollowers(n,s);
+            float avgfg=averageFollowing(n,s);
+            float avgr=averageRepos(n,s);
+            cout<<endl;
+            cout<<setw(20)<<"Average Followers"<<"\t"<<avgfg<<endl;
+            cout<<setw(20)<<"Average Following"<<"\t"<<avgfr<<endl;
+            cout<<setw(20)<<"Average Repos"<<"\t"<<avgr<<endl;
+            cout<<endl;
+        }
+        else{
             cout<<"Invalid choice"<<endl;
         }
     }
