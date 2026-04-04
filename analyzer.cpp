@@ -29,6 +29,9 @@ public:
         cout<<"Following="<<following<<endl;
         cout<<"Repos="<<repos<<endl;
     }
+    string getUsername(){
+        return username;
+    }
     int getFollowers(){
         return followers;
     }
@@ -47,18 +50,18 @@ int maximumFollowers(int n,Student s[]){
     int maximum=0;
     for(int i=0;i<n;i++){
         int followers=s[i].getFollowers();
-        if(followers>maximum){
-            maximum=followers;
+        if(followers>s[maximum].getFollowers()){
+            maximum=i;
         }
     }
     return maximum;
 }
 int minimumFollowers(int n,Student s[]){
-    int minimum=9999999;
+    int minimum=0;
     for(int i=0;i<n;i++){
         int followers=s[i].getFollowers();
-        if(followers<minimum){
-            minimum=followers;
+        if(followers<s[minimum].getFollowers()){
+            minimum=i;
         }
     }
     return minimum;
@@ -67,18 +70,18 @@ int maximumFollowing(int n,Student s[]){
     int maximum=0;
     for(int i=0;i<n;i++){
         int following=s[i].getFollowing();
-        if(following>maximum){
-            maximum=following;
+        if(following>s[maximum].getFollowing()){
+            maximum=i;
         }
     }
     return maximum;
 }
 int minimumFollowing(int n,Student s[]){
-    int minimum=9999999;
+    int minimum=0;
     for(int i=0;i<n;i++){
         int following=s[i].getFollowing();
-        if(following<minimum){
-            minimum=following;
+        if(following<s[minimum].getFollowing()){
+            minimum=i;
         }
     }
     return minimum;
@@ -87,18 +90,18 @@ int maximumRepos(int n,Student s[]){
     int maximum=0;
     for(int i=0;i<n;i++){
         int repos=s[i].getRepos();
-        if(repos>maximum){
-            maximum=repos;
+        if(repos>s[maximum].getRepos()){
+            maximum=i;
         }
     }
     return maximum;
 }
 int minimumRepos(int n,Student s[]){
-    int minimum=9999999;
+    int minimum=0;
     for(int i=0;i<n;i++){
         int repos=s[i].getRepos();
-        if(repos<minimum){
-            minimum=repos;
+        if(repos<s[minimum].getRepos()){
+            minimum=i;
         }
     }
     return minimum;
@@ -123,6 +126,40 @@ float averageRepos(int n,Student s[]){
         total+=s[i].getRepos();
     }
     return (float)total/n;
+}
+int findUser(int n,Student s[],string username){
+    for(int i=0;i<n;i++){
+        if(s[i].getUsername()==username){
+            return i;
+        }
+    }
+    return -1;
+}
+void compareUsers(Student a, Student b){
+    cout<<endl<<"----- COMPARISON -----"<<endl;
+    cout<<endl<<"Followers:"<<endl;
+    if(a.getFollowers() > b.getFollowers())
+        cout<<a.getUsername()<<" is higher"<<endl;
+    else if(a.getFollowers() < b.getFollowers())
+        cout<<b.getUsername()<<" is higher"<<endl;
+    else
+        cout<<"Equal"<<endl;
+
+    cout<<"Following:"<<endl;
+    if(a.getFollowing() > b.getFollowing())
+        cout<<a.getUsername()<<" is higher"<<endl;
+    else if(a.getFollowing() < b.getFollowing())
+        cout<<b.getUsername()<<" is higher"<<endl;
+    else
+        cout<<"Equal"<<endl;
+
+    cout<<endl<<"Repos:"<<endl;
+    if(a.getRepos() > b.getRepos())
+        cout<<a.getUsername()<<" is higher"<<endl;
+    else if(a.getRepos() < b.getRepos())
+        cout<<b.getUsername()<<" is higher"<<endl;
+    else
+        cout<<"Equal"<<endl;
 }
 int main(){
     CURL *curl;
@@ -180,7 +217,9 @@ int main(){
         cout<<"------------------CHOOSE YOUR CHOICE------------------"<<endl;
         cout<<setw(10)<<1<<"\t View details of all users"<<endl; 
         cout<<setw(10)<<2<<"\t Maximum and Minimum followers,following,repos"<<endl; 
-        cout<<setw(10)<<2<<"\t Average followers,following,repos"<<endl; 
+        cout<<setw(10)<<3<<"\t Average followers,following,repos"<<endl; 
+        cout<<setw(10)<<4<<"\t Search for user"<<endl; 
+        cout<<setw(10)<<5<<"\t Compare 2 users"<<endl; 
         cout<<setw(10)<<0<<"\t Exit program"<<endl; 
         cin>>choice;
         if(choice==0){
@@ -200,22 +239,55 @@ int main(){
             int maxr=maximumRepos(n,s);
             int minr=minimumRepos(n,s);
             cout<<endl;
-            cout<<setw(20)<<"Maximum Followers"<<"\t"<<maxfr<<endl;
-            cout<<setw(20)<<"Minimum Followers"<<"\t"<<minfr<<endl;
-            cout<<setw(20)<<"Maximum Following"<<"\t"<<maxfl<<endl;
-            cout<<setw(20)<<"Minimum Following"<<"\t"<<minfl<<endl;
-            cout<<setw(20)<<"Maximum Repos"<<"\t"<<maxr<<endl;
-            cout<<setw(20)<<"Minimum Repos"<<"\t"<<minr<<endl;
+            cout<<setw(20)<<"----------Maximum Followers---------"<<endl;
+            s[maxfr].getStudent();
+            cout<<setw(20)<<"----------Minimum Followers----------"<<endl;
+            s[minfr].getStudent();
+            cout<<setw(20)<<"----------Maximum Following----------"<<endl;
+            s[maxfl].getStudent();
+            cout<<setw(20)<<"----------Minimum Following----------"<<endl;
+            s[minfl].getStudent();
+            cout<<setw(20)<<"----------Maximum Repos----------"<<endl;
+            s[maxr].getStudent();
+            cout<<setw(20)<<"----------Minimum Repos----------"<<endl;
+            s[minr].getStudent();
             cout<<endl;
         }else if(choice==3){
             float avgfr=averageFollowers(n,s);
             float avgfg=averageFollowing(n,s);
             float avgr=averageRepos(n,s);
             cout<<endl;
-            cout<<setw(20)<<"Average Followers"<<"\t"<<avgfg<<endl;
-            cout<<setw(20)<<"Average Following"<<"\t"<<avgfr<<endl;
+            cout<<setw(20)<<"Average Followers"<<"\t"<<avgfr<<endl;
+            cout<<setw(20)<<"Average Following"<<"\t"<<avgfg<<endl;
             cout<<setw(20)<<"Average Repos"<<"\t"<<avgr<<endl;
             cout<<endl;
+        }else if(choice==4){
+            cout<<endl;
+            cout<<"Enter username of student to search"<<endl;
+            string c;
+            cin>>c;
+            int index=findUser(n,s,c);
+            if(index==-1){
+                cout<<"Student not found"<<endl;
+            }else{
+                s[index].getStudent();
+            }
+
+        }else if(choice==5){
+            string u1, u2;
+            cout<<"Enter first username:\n";
+            cin>>u1;
+            cout<<"Enter second username:\n";
+            cin>>u2;
+
+            int i1 = findUser(n, s, u1);
+            int i2 = findUser(n, s, u2);
+
+            if(i1 == -1 || i2 == -1){
+                cout<<"One or both users not found\n";
+            } else {
+                compareUsers(s[i1], s[i2]);
+            }
         }
         else{
             cout<<"Invalid choice"<<endl;
