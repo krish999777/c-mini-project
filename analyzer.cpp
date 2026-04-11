@@ -1,8 +1,21 @@
+/*
+g++ analyzer.cpp -o app \
+-std=c++17 \
+-I/opt/homebrew/include \
+-L/opt/homebrew/lib \
+-lraylib \
+-framework OpenGL \
+-framework Cocoa \
+-framework IOKit \
+-framework CoreVideo \
+-lcurl
+*/
 #include<iostream>
 #include<string>
 #include <curl/curl.h>
 #include "json.hpp"
 #include<iomanip>
+#include <raylib.h>
 using json = nlohmann::json;
 using namespace std;
 class Student{
@@ -45,6 +58,40 @@ public:
 size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
     ((string*)userp)->append((char*)contents, size * nmemb);
     return size * nmemb;
+}
+void showBarChart(int n, Student s[]) {
+    InitWindow(800, 600, "Bar Chart");
+
+    int maxVal = 0;
+    for(int i = 0; i < n; i++)
+        maxVal = max(maxVal, s[i].getRepos());
+
+    while (!WindowShouldClose()) {
+        DrawLine(80, 500, 750, 500, BLACK);   // X-axis
+        DrawLine(80, 100, 80, 500, BLACK);
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+
+        int barWidth = 600 / n;
+
+        for(int i = 0; i < n; i++) {
+            int height = (s[i].getRepos() * 400) / maxVal;
+
+            DrawRectangle(100 + i * barWidth, 500 - height,
+                          barWidth - 10, height, BLUE);
+            DrawText(s[i].getUsername().c_str(),
+            100 + i * barWidth,
+            510,
+            10,
+            BLACK);
+        }
+
+        DrawText("Repos Chart", 300, 20, 20, BLACK);
+
+        EndDrawing();
+    }
+
+    CloseWindow();
 }
 int maximumFollowers(int n,Student s[]){
     int maximum=0;
@@ -219,7 +266,8 @@ int main(){
         cout<<setw(10)<<2<<"\t Maximum and Minimum followers,following,repos"<<endl; 
         cout<<setw(10)<<3<<"\t Average followers,following,repos"<<endl; 
         cout<<setw(10)<<4<<"\t Search for user"<<endl; 
-        cout<<setw(10)<<5<<"\t Compare 2 users"<<endl; 
+        cout<<setw(10)<<5<<"\t Compare 2 users"<<endl;
+        cout<<setw(10)<<6<<"\t Show bar chart"<<endl; 
         cout<<setw(10)<<0<<"\t Exit program"<<endl; 
         cin>>choice;
         if(choice==0){
@@ -288,6 +336,8 @@ int main(){
             } else {
                 compareUsers(s[i1], s[i2]);
             }
+        }else if(choice==6){
+            showBarChart(n, s);
         }
         else{
             cout<<"Invalid choice"<<endl;
