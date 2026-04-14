@@ -62,25 +62,35 @@ size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
 void showBarChart(int n, Student s[]) {
     InitWindow(800, 600, "Bar Chart");
 
-    int maxVal = 0;
+    int maxi = 0;
     for(int i = 0; i < n; i++)
-        maxVal = max(maxVal, s[i].getRepos());
+        maxi = max(maxi, s[i].getRepos());
 
     while (!WindowShouldClose()) {
-        DrawLine(80, 500, 750, 500, BLACK);   // X-axis
-        DrawLine(80, 100, 80, 500, BLACK);
         BeginDrawing();
+        DrawLine(80, 500, 750, 500, BLACK);
+        DrawLine(80, 100, 80, 500, BLACK);
         ClearBackground(RAYWHITE);
+        int divisions = 5;
 
-        int barWidth = 600 / n;
+        for(int i = 0; i <= divisions; i++) {
+            int y = 500 - (i * 400 / divisions);
+            int value = (maxi * i) / divisions;
+
+            DrawLine(75, y, 80, y, BLACK);
+
+            DrawText(to_string(value).c_str(), 30, y - 5, 10, BLACK);
+        }
+
+        int width = 600 / n;
 
         for(int i = 0; i < n; i++) {
-            int height = (s[i].getRepos() * 400) / maxVal;
+            int height = (s[i].getRepos() * 400) / maxi;
 
-            DrawRectangle(100 + i * barWidth, 500 - height,
-                          barWidth - 10, height, BLUE);
+            DrawRectangle(100 + i * width, 500 - height,
+                          width - 10, height, BLUE);
             DrawText(s[i].getUsername().c_str(),
-            100 + i * barWidth,
+            105 + i * width,
             510,
             10,
             BLACK);
@@ -200,7 +210,7 @@ void compareUsers(Student a, Student b){
     else
         cout<<"Equal"<<endl;
 
-    cout<<endl<<"Repos:"<<endl;
+    cout<<"Repos:"<<endl;
     if(a.getRepos() > b.getRepos())
         cout<<a.getUsername()<<" is higher"<<endl;
     else if(a.getRepos() < b.getRepos())
